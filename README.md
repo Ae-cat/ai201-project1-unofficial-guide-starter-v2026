@@ -95,14 +95,15 @@ The good: cheapest housing tier by about $900 a year, and the singles are real s
 <!-- One complete question and answer, pasted as text, with the source line
      visible. Milestone 4. -->
 
-**Question:**
+**Question:** Do financial aid packages for study abroad generally cover a student's trip?
 
-**Answer:**
+**Answer:** Yes, the financial aid package travels with you on the study abroad program.
 
-```
-```
+**Source:** `admin_study_abroad.txt`
+
 
 **My relevance cutoff:**
+I kept my relevance cutoff at 0.60. I tested five questions covered by my campus_life documents and five other out-of-scope questions. For the five in-scope questions, the best distances ranged from 0.3193 to 0.4727. For the five out-of-scope questions, the best distances ranged from 0.7873 to 0.9228. Seeing as though there is a large gap between the two groups of questions from 0.4727 to 0.7873, I found that 0.6 falls within the gap. At this cutoff the five in-scope questions passed the relevance gate while the five out-of-scope questions were refused.
 
 <!-- The number you set in config.py, and how you got there.
 
@@ -114,8 +115,16 @@ The good: cheapest housing tier by about $900 a year, and the singles are real s
      Milestone 4. -->
 
 | Question | In corpus? | Best distance |
-|---|---|---|
-|  |  |  |
+|Do financial aid packages for study abroad generally cover a student's trip?|Yes|0.3213|
+|What do students say about the time it takes to get around campus?|Yes|0.4586|
+|What is the cost of the cheapest on-campus housing?|Yes|0.3890|
+|How late is the library open during the spring term?|Yes|0.3193|
+|Which course is known for having a heavy workload?|Yes|0.4727|
+|What is the capital of Mongolia?|No|0.7873|
+|How do I change the oil in a diesel engine?|No|0.9228|
+|Who won the 1994 World Cup?|No|0.8474|
+|What is the recommended dosage of ibuprofen for a headache?|No|0.8243|
+|How do I write a for loop in Rust?|No|0.8768|
 
 ## How I Used AI
 
