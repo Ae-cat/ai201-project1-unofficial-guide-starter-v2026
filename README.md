@@ -21,6 +21,8 @@
 
 ## What This Does
 
+This project uses the campus_life corpus, which contains documents about student life, courses, housing, transportation, campus services, and other university topics. The system takes in a student's questions and searches documents for relevant information using similarity-based retrieval and embeddings. If the information retrieved is relevant to a certain corpus the system generates a short answer using only the document retrieved and naming the source document. If a question is asked outside the scope of campus life, the question is refused by the relevance gate in order to prevent random non-factual replies.
+
 <!-- Three or four sentences. Which corpus you picked, and the kinds of
      questions your system answers. Write it for someone who has never seen
      this repo.
@@ -137,9 +139,9 @@ I kept my relevance cutoff at 0.60. I tested five questions covered by my campus
 
      Milestone 5. -->
 
-**1.**
+**1.** I asked AI to help me think through a chunking strategy for the campus_life documents. I am unfamiliar with chunking and so I read through suggestions Claude and ChatGPT had given me. Before taking all suggestions given I first read through a few documents to see what the average size of the documents were. From this I tested out different ways to split the paragraphs and if I should have included any overlap. I wrote out some pseudo code and asked ChatGPT to refine it for me and I ended up tweaking it a bit.
 
-**2.**
+**2.** I asked Claude to explain the milestones in greater specifics for me, especially milestone number 3 and 4. I found myself mixing up my commands for milestone four so I asked Claude to write out a base of commands I would be using for the milestone. After doing this I was able to organize my terminal code and test my questions efficiently. I also inquired about the cutoff although I was told to experiment with .5 I decided to keep the cutoff at .6 because it clearly seperated my in-scope and out-of-scope questions.
 
 <!-- ── Stretch features ─────────────────────────────────────────────────────
      Doing one? Say so here BEFORE you start. A feature this README never
