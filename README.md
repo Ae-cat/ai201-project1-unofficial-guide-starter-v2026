@@ -29,8 +29,10 @@
 
 ## Chunking Strategy
 
-**Chunk size:**
-**Overlap:**
+**Chunk size:** 50-character threshold for combining short paragraphs
+**Overlap:** 0 Characters
+
+After opening and reading a few of the documents associated with the campus_life corpus, I noticed that the text was typically short and contained small paragraphs that often represented separate thoughts. At first, I attempted strictly splitting the paragraphs with zero overlap. This resulted in 92 chunks under the 50 character limit I set as a criterion, so I chose to combine short paragraphs with neighboring content. This then produced 179 chunks with an average length of 154 characters, shortest of 57 characters, and longest of 397 characters. I chose this combination of small paragraphs in order to keep complete thoughts together while creating chunks that are not extremely large or small.
 
 <!-- What about YOUR documents made you pick these numbers? Short posts and
      long sectioned guides don't want the same chunking, and "800 seemed
@@ -41,6 +43,7 @@
      more than pretending you got it right first time.
 
      Milestone 3. -->
+
 
 ## Sample Chunks
 
@@ -53,29 +56,38 @@
 
      Milestone 3. -->
 
-**Chunk 1** — source: `` — produced by: ``
+**Chunk 1** — source: `admin_add_drop_deadline.txt#0` — produced by: `chunker.py::split_documents` 
 
 ```
+On the add/drop deadline
+
+You can add a course through the end of the second week. Dropping is a longer window — through the end of week six — but a drop after week two shows as a W on your transcript. Nothing anywhere on the registrar's site says this plainly, and students find out from each other.
 ```
 
-**Chunk 2** — source: `` — produced by: ``
+**Chunk 2** — source: `course_cs_340_exams.txt#1` — produced by: `chunker.py::split_documents`
 
 ```
+Start the term project in week three, not week eight; everyone learns this the hard way.
 ```
 
-**Chunk 3** — source: `` — produced by: ``
+**Chunk 3** — source: `course_phys_130_workload.txt#1` — produced by: `chunker.py::split_documents`
 
 ```
+It's front-loaded — the first month is heavier than the rest, partly because you're learning the format.
 ```
 
-**Chunk 4** — source: `` — produced by: ``
+**Chunk 4** — source: `health_center.txt#0` — produced by: `chunker.py::split_documents`
 
 ```
+The health centre
+
+Walk-in hours are 8am to 11am; everything after that is by appointment and appointments run about a week out. If something is urgent, go at 8am and wait rather than booking.
 ```
 
-**Chunk 5** — source: `` — produced by: ``
+**Chunk 5** — source: `housing_morrow_house.txt#1` — produced by: `chunker.py::split_documents`
 
 ```
+The good: cheapest housing tier by about $900 a year, and the singles are real singles.
 ```
 
 ## Sample Answer
