@@ -25,6 +25,7 @@ contains the answer.
 **Why this target:**
 <!-- e.g. "One of my questions is about a topic only two documents mention, so
      I expect that one to be hard." -->
+I set this criterion because one of my questions asked about the cost of on-campus housing, which may not be specifically detailed in a document. I chose 4 out of 5 becuase I expect most of my questions to have an available answer.
 
 ---
 
@@ -35,6 +36,8 @@ Every answer the system produces names at least one source document.
 **Why this target:**
 <!-- Why all five and not four? What about your setup makes that achievable —
      or what would have to go wrong for it not to be? -->
+This criterion is set to establish where each reply was sourced from. Sources can be used to find the full context of the reply. I selected all five for this criterion as verifying a source and being able to see full context is important for all responses.
+
 
 ---
 
@@ -52,10 +55,11 @@ in at least 4 of 5 tries.
 **Why this target:**
 <!-- What did your distances look like when you set the cutoff in Milestone 4?
      Was there a clean gap, or did the two groups overlap? -->
-
+If data cannot be retrieved or no reply matches the question this informs the user instead of providing unrelated infromation. I chose 4 out of 5  because there is a possibility that a keyword may cause the system to retrieve unrelated matches.
 ---
 
 ## 4. Something about your chunks
+For at least 4 of my 5 test questions, the retrieved chunk should be between 50 and 400 characters.
 
 <!-- YOU WRITE THIS ONE.
 
@@ -72,12 +76,13 @@ in at least 4 of 5 tries.
 
 
 **Why this target:**
-
+I chose 4 out of 5 to allow for the possibility of an extremely short response or one longer response. I chose between 50 and 400 characters because the documents I have read contain short sentences or paragraphs. I believe this range provides enough information without making the chunks extremely long.
 
 
 ---
 
 ## 5. Your choice
+For all 5 of my test questions, the system should produce an answer in under 8 seconds.
 
 <!-- YOU WRITE THIS ONE TOO.
 
@@ -90,7 +95,7 @@ in at least 4 of 5 tries.
 
 
 **Why this target:**
-
+This criterion provides a test to check whether the system produces answers efficiently. I chose 8 seconds because it allows time for embedding, retrieval, and API callings while keeping response times short for the user.
 
 
 ---
