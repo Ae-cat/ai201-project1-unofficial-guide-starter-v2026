@@ -170,15 +170,78 @@ I kept my relevance cutoff at 0.60. I tested five questions covered by my campus
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 4. Retrieved chunk is between 50 and 400 characters | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 5. System produces an answer in under 8 seconds | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
 
 <!-- Underneath, paste the REAL output for each criterion from one of your
      runs — the actual text your system produced, not a description of it.
      Name the file and function that produced it. -->
+**Source:** `run_2026-09-23_1952_before.md`
+- Produced by: `run_eval.py::main`
+- Retrieval: `store.py::search`, chunks from `chunker.py::split_documents`
+- Corpus: `campus_life` (index variant `default`)
+- top-k: 5 · relevance cutoff: 0.6
+- Runs per question: 3, caching off
+- When: 2026-09-23 19:52
+## Real output
+<!-- Criterion 1: Chunk Contains an Answer -->
+### Which course is known for having a heavy workload? — run 1
+
+- Best distance: 0.4727 (passed the gate)
+- Sources retrieved: course_biol_160.txt, course_biol_160_workload.txt, course_cs_210_workload.txt, course_engl_205_workload.txt, money_textbooks.txt
+
+```
+BIOL 160 Cell Biology is known by reputation as the heaviest first-year course (from `course_biol_160_workload.txt` and `course_biol_160.txt`).
+```
+**Source:** `run_2026-09-23_1952_before.md`
+<!-- Criterion 2: Source is Named -->
+### Do financial aid packages for study abroad generally cover a student's trip? — run 2
+
+- Best distance: 0.3213 (passed the gate)
+- Sources retrieved: admin_campus_jobs_and_financial_aid.txt, admin_graduation_requirements.txt, admin_printing_quota.txt, admin_study_abroad.txt, money_textbooks.txt
+
+```
+Yes, the financial aid package travels with you on the study abroad program. 
+
+Source: admin_study_abroad.txt
+```
+**Source:** `run_2026-09-23_1952_before.md`
+<!-- Criterion 3: Out-of-Corpus Questions Stopped -->
+## The relevance gate on out-of-corpus questions
+
+Produced by `run_eval.py::check_out_of_scope`, cutoff 0.6. Refused 5 of 5.
+
+| Out-of-scope question | Best distance | Gate |
+|---|---|---|
+| What is the capital of Mongolia? | 0.787 | refused |
+| How do I change the oil in a diesel engine? | 0.923 | refused |
+| Who won the 1994 World Cup? | 0.847 | refused |
+| What is the recommended dosage of ibuprofen for a headache? | 0.824 | refused |
+| How do I write a for loop in Rust? | 0.877 | refused |
+
+**Source:** `results/run_2026-09-27_criteria45_before.md`
+<!-- Criterion 4 -->
+## Retrieved chunk between 50 and 400 characters
+Every one of the 25 retrieved chunks is in range. So is every chunk in the
+index — `chunker.py::split_documents` produces 179 chunks, shortest 57 and
+longest 397. This criterion cannot fail. See Diagnoses in the README.
+
+**Source:** `results/run_2026-09-27_criteria45_before.md`
+<!-- Criterion 5 -->
+## Answer in under 8 seconds
+=== Timing Run 1 ===
+2.607 seconds | Do financial aid packages for study abroad generally cover a student's trip?
+1.058 seconds | What do students say about the time it takes to get around campus?
+0.722 seconds | What is the cost of the cheapest on-campus housing?
+0.818 seconds | How late is the library open during the spring term?
+0.876 seconds | Which course is known for having a heavy workload?
+
+Under 8 seconds: 5 of 5, 5 of 5, 5 of 5. Slowest single answer 2.607s, on the
+first question of the first run — that one includes loading the embedding model.
+Every answer after it came back in about a second.
 
 ## Verdicts
 
