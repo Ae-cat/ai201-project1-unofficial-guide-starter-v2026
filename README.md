@@ -141,7 +141,7 @@ I kept my relevance cutoff at 0.60. I tested five questions covered by my campus
 
 **1.** I asked AI to help me think through a chunking strategy for the campus_life documents. I am unfamiliar with chunking and so I read through suggestions Claude and ChatGPT had given me. Before taking all suggestions given I first read through a few documents to see what the average size of the documents were. From this I tested out different ways to split the paragraphs and if I should have included any overlap. I wrote out some pseudo code and asked ChatGPT to refine it for me and I ended up tweaking it a bit.
 
-**2.** I asked Claude to explain the milestones in greater specifics for me, especially milestone number 3 and 4. I found myself mixing up my commands for milestone four so I asked Claude to write out a base of commands I would be using for the milestone. After doing this I was able to organize my terminal code and test my questions efficiently. I also inquired about the cutoff although I was told to experiment with .5 I decided to keep the cutoff at .6 because it clearly seperated my in-scope and out-of-scope questions.
+**2.** I asked Claude to explain the milestones in greater specifics for me, especially milestone number 3 and 4. I found myself mixing up my commands for milestone four so I asked Claude to write out a base of commands I would be using for the milestone. After doing this I was able to organize my terminal code and test my questions efficiently. I also inquired about the cutoff although I was told to experiment with .5 I decided to keep the cutoff at .6 because it clearly separated my in-scope and out-of-scope questions.
 
 <!-- ── Stretch features ─────────────────────────────────────────────────────
      Doing one? Say so here BEFORE you start. A feature this README never
@@ -308,6 +308,25 @@ model. Every answer after it came back in about a second.
      low, and which one you'd tighten and to what.
 
      Milestone 3. -->
+
+**I missed nothing.** All five criteria were MET on all three runs.
+
+### My targets were set low
+- **Criterion 4 cannot fail.** `chunker.py::split_documents` produces 179 chunks, shortest 57 and longest 397. My range is 50 to 400, so every chunk is already inside it before retrieval runs. I could break retrieval completely and still score 5 of 5.
+- **Criterion 5 cleared by about eight times.** Slowest answer 2.607s against an 8-second target, and that one included loading the embedding model. Everything after it came back in about a second. I picked 8 seconds to allow time for embedding and processing without measuring how much time it would take first.
+- **Criterion 3 never tested the gate near its cutoff.** Distances ran 0.787 to 0.923 against a cutoff of 0.6, so nothing came within 0.18 of the boundary. I proved the gate rejects questions about Mongolia, which was never in doubt.
+
+### Question 3 — the one question that failed
+**Stage: loading. Mechanism: the fact never entered the pipeline.**
+Question 3 asks the cost of the cheapest housing. The nearest chunk, `housing_morrow_house.txt#1`, says *"cheapest housing tier by about $900 a year"* which is a difference between tiers, not a price. All 19 dollar amounts in my corpus are laundry, meals, transcripts or printing. None is a rent.
+
+My pipeline runs in five steps: loading, chunking, embedding, retrieval, then generation. To find where a question went wrong, I started at the end and worked backwards. If the model had what it needed and did not use it, the problem would be generation. But the answer was not in any of the chunks, so something earlier had gone wrong. I then went and read the documents themselves, and the figure was not in any of them either. That puts the problem at loading, the very first step. None of the later steps can find a fact that was never there to begin with.
+
+### What I would tighten, and to what
+**Criterion 3 — plausible out-of-corpus questions instead of absurd ones.** I checked which topics my 88 documents genuinely miss rather than guessing: nothing on the gym, career services, tutoring, campus mail or scholarships.
+Those questions sound like ones my corpus does answer, so they should land near 0.6 rather than above 0.78. The target stays at 4 of 5; only the test gets harder. Making the tests harder will better test if the system is learning.
+
+**Criterion 4 — measure relevance instead of length.** Chunk length does not tell me whether a chunk is useful. A 200-character chunk about laundry is the right length but not relevant for a question about the library. What I actually care about is whether the chunks are relevant. My system already measures that for me: every chunk comes back with a distance, and a smaller distance means the chunk is closer to the question. An alternate tightened version: *for at least 4 of my 5 questions, all five retrieved chunks are within the 0.6 cutoff.* My before run scores 4 of 5 on that. Question 1 fails, because three of its chunks were at 0.662, 0.738 and 0.747 and reached the model anyway — `gate.py::check` only checks the closest chunk, so the rest ride along. Unlike my original, this is a criterion my system can fail.
 
 ## The Improvement
 
