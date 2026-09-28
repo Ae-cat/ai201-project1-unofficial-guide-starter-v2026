@@ -25,6 +25,7 @@ for run in range(1, 4):
         decision = gate.check(results, threshold=config.THRESHOLD)
 
         if decision.passed:
+            results = gate.keep_relevant(results, config.THRESHOLD)
             answer = answer_from_chunks(
                 question,
                 results,

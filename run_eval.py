@@ -63,6 +63,10 @@ def run_once(question: str, top_k, threshold, corpus, variant):
     if not decision.passed:
         return gate.REFUSAL, results, decision
 
+    # Calls function keep_relevant
+    # Drops chunks the gate would have refused on their own
+    results = gate.keep_relevant(results, threshold)
+
     # cache=False on purpose. Three runs have to be three real answers.
     answer = answer_from_chunks(question, results, cache=False)
     return answer, results, decision

@@ -330,34 +330,31 @@ Those questions sound like ones my corpus does answer, so they should land near 
 
 ## The Improvement
 
-**What I changed:**
+**What I changed:** I added `gate.py::keep_relevant`, which drops any retrieved chunk further from the question than the 0.6 cutoff, and called it in `run_eval.py::run_once` after the gate decision. `gate.py::check` is untouched, so the refuse/allow decision works exactly as before. The only thing that changed is which chunks reach the model.
 
-**Why I picked it:**
-
-<!-- Connect it to a specific diagnosis above in one sentence. If you can't,
-     you picked a fix because it sounded impressive. -->
+**Why I picked it:** My diagnosis found that question 1 handed the model three chunks at 0.662, 0.738 and 0.747 because `gate.py::check` only tests the closest chunk, so once that one clears the cutoff the rest ride along regardless.
 
 ### Run Log — After
 
-<!-- Same format, same five criteria, three runs each.
-     `python run_eval.py --label after` -->
-
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 4/5 | 4/5 | 4/5 | MET |
+| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 4. Retrieved chunk is between 50 and 400 characters | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 5. System produces an answer in under 8 seconds | 5 of 5 | 4/5 | 5/5 | 5/5 | **MISSED** |
 
 **Did it help?**
 
-<!-- Say plainly whether it did, and how you know. If it made things worse,
-     say that — a change that backfired, honestly reported, earns full credit
-     and is more interesting than one that worked. What matters is that you can
-     tell.
+Yes, but none of my five criteria can show it.
 
-     Milestone 4. -->
+Before the change, question 1 sent the model five chunks and three of them were past the 0.6 cutoff. After the change it sends two chunks and both are under the cutoff. That is what I wanted the fix to do. In Diagnoses I said a better criterion would be that every chunk sent to the model is within the cutoff. My before run scores 4 of 5 on that and my after run scores 5 of 5.
+
+Criteria 1 to 4 stayed exactly the same, which I expected before I ran anything. Criterion 1 cannot go above 4 of 5 because question 3 asks for a figure my corpus does not have. Criteria 2, 3 and 4 were already at 5 of 5, so there was no room for them to go up. Criterion 3 also could not change because I left `gate.py::check` alone on purpose.
+
+Criterion 5 went from MET to MISSED. One answer in run 1 took 11.898 seconds, which is over my 8 second target. That time is not my system doing work. It is `time.sleep()` inside `generate.py::_wait_for_slot`, which limits requests to 30 per minute, and I had run the eval script and the timing script close together. My change makes the prompt shorter, not longer, so it cannot be the reason anything got slower. I am still recording it as MISSED, as the number is larger than 8 seconds.
+
+Overall, my system improved, but my test could not tell.
 
 ## What's Still Broken
 

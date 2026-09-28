@@ -56,3 +56,8 @@ def check(results: list[Result], threshold: float | None = None) -> GateDecision
 
     best = min(r.distance for r in results)
     return GateDecision(passed=best < threshold, best_distance=best, threshold=threshold)
+
+# Keeps only the chunks that are under the 0.6 cutoff, so the model does not see chunks that would have been refused on their own.
+def keep_relevant(results: list[Result], threshold: float | None = None) -> list[Result]:
+    threshold = config.THRESHOLD if threshold is None else threshold
+    return [r for r in results if r.distance < threshold]
