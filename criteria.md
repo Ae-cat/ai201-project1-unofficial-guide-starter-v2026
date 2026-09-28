@@ -25,7 +25,7 @@ contains the answer.
 **Why this target:**
 <!-- e.g. "One of my questions is about a topic only two documents mention, so
      I expect that one to be hard." -->
-I set this criterion because one of my questions asked about the cost of on-campus housing, which may not be specifically detailed in a document. I chose 4 out of 5 becuase I expect most of my questions to have an available answer.
+I set this criterion because one of my questions asked about the cost of on-campus housing, which may not be specifically detailed in a document. I chose 4 out of 5 because I expect most of my questions to have an available answer.
 
 ---
 
@@ -55,7 +55,7 @@ in at least 4 of 5 tries.
 **Why this target:**
 <!-- What did your distances look like when you set the cutoff in Milestone 4?
      Was there a clean gap, or did the two groups overlap? -->
-If data cannot be retrieved or no reply matches the question this informs the user instead of providing unrelated infromation. I chose 4 out of 5  because there is a possibility that a keyword may cause the system to retrieve unrelated matches.
+If data cannot be retrieved or no reply matches the question this informs the user instead of providing unrelated information. I chose 4 out of 5  because there is a possibility that a keyword may cause the system to retrieve unrelated matches.
 ---
 
 ## 4. Something about your chunks
