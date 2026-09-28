@@ -170,7 +170,7 @@ I kept my relevance cutoff at 0.60. I tested five questions covered by my campus
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 4/5 | 4/5 | 4/5 | MET |
 | 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
 | 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
 | 4. Retrieved chunk is between 50 and 400 characters | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
@@ -225,13 +225,25 @@ Produced by `run_eval.py::check_out_of_scope`, cutoff 0.6. Refused 5 of 5.
 **Source:** `results/run_2026-09-27_criteria45_before.md`
 <!-- Criterion 4 -->
 ## Retrieved chunk between 50 and 400 characters
-Every one of the 25 retrieved chunks is in range. So is every chunk in the
-index — `chunker.py::split_documents` produces 179 chunks, shortest 57 and
-longest 397. This criterion cannot fail. See Diagnoses in the README.
+
+Produced by `chunker.py::split_documents`, summarised by `chunker.py::describe`:
+
+```
+179 chunks, 154 characters on average (shortest 57, longest 397), produced by chunker.py::split_documents
+```
+
+Shortest 57, longest 397, against a range of 50 to 400. Every chunk in the
+index is in range, so every retrieved chunk is necessarily in range: 5 of 5.
+This criterion cannot fail. See Diagnoses below.
 
 **Source:** `results/run_2026-09-27_criteria45_before.md`
 <!-- Criterion 5 -->
 ## Answer in under 8 seconds
+
+Produced by `measure_timing.py`, timing `store.py::search` → `gate.py::check` →
+`generate.py::answer_from_chunks`, caching off.
+
+```
 === Timing Run 1 ===
 2.607 seconds | Do financial aid packages for study abroad generally cover a student's trip?
 1.058 seconds | What do students say about the time it takes to get around campus?
@@ -239,9 +251,24 @@ longest 397. This criterion cannot fail. See Diagnoses in the README.
 0.818 seconds | How late is the library open during the spring term?
 0.876 seconds | Which course is known for having a heavy workload?
 
+=== Timing Run 2 ===
+0.984 seconds | Do financial aid packages for study abroad generally cover a student's trip?
+1.074 seconds | What do students say about the time it takes to get around campus?
+0.796 seconds | What is the cost of the cheapest on-campus housing?
+1.012 seconds | How late is the library open during the spring term?
+1.087 seconds | Which course is known for having a heavy workload?
+
+=== Timing Run 3 ===
+1.085 seconds | Do financial aid packages for study abroad generally cover a student's trip?
+1.132 seconds | What do students say about the time it takes to get around campus?
+0.915 seconds | What is the cost of the cheapest on-campus housing?
+0.818 seconds | How late is the library open during the spring term?
+1.360 seconds | Which course is known for having a heavy workload?
+```
+
 Under 8 seconds: 5 of 5, 5 of 5, 5 of 5. Slowest single answer 2.607s, on the
-first question of the first run — that one includes loading the embedding model.
-Every answer after it came back in about a second.
+first question of the first run — that one includes loading the embedding
+model. Every answer after it came back in about a second.
 
 ## Verdicts
 
@@ -256,11 +283,11 @@ Every answer after it came back in about a second.
 
 | # | Criterion | Verdict | How I decided |
 |---|---|---|---|
-| 1 |  |  |  |
-| 2 |  |  |  |
-| 3 |  |  |  |
-| 4 |  |  |  |
-| 5 |  |  |  |
+| 1 | Retrieved chunk contains the answer | **MET** | 4 of 5 questions had the answer in a retrieved chunk, meeting the target of at least 4 of 5. `scorer.py` reported 5 of 5, but I read the chunks myself, question 3 asks the cost of the cheapest housing and no document in my corpus states a rent figure, only that Morrow House is cheaper by about $900 a year. |
+| 2 | Every answer names a source | **MET** | Across the 3 runs, all 15 answers named at least one source file. |
+| 3 | Gate stops out-of-corpus questions | **MET** | 5 of 5 refused, the threshold was 0.6 and the distances ranged from 0.787-0.923. |
+| 4 | Retrieved chunk is between 50 and 400 characters | **MET** | 5 of 5 affirmed, all test chunks were between 50 and 400 characters. Revision: original was "the retrieved chunk" but top-k is 5, so it now refers to all 5.|
+| 5 | System produces an answer in under 8 seconds | **MET** | 5 of 5 affirmed, the slowest answer was 2.607 seconds, way below the 8 second limit. |
 
 ## Diagnoses
 
