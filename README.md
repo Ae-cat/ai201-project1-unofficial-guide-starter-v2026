@@ -348,6 +348,14 @@ Those questions sound like ones my corpus does answer, so they should land near 
 
 Yes, but none of my five criteria can show it.
 
+| Criterion | Before | After |
+|---|---|---|
+| 1. Retrieved chunk contains the answer | 4/5 MET | 4/5 MET |
+| 2. Every answer names a source | 5/5 MET | 5/5 MET |
+| 3. Gate stops out-of-corpus questions | 5/5 MET | 5/5 MET |
+| 4. Retrieved chunk is between 50 and 400 characters | 5/5 MET | 5/5 MET |
+| 5. System produces an answer in under 8 seconds | 5/5 MET | 4/5 MISSED |
+
 Before the change, question 1 sent the model five chunks and three of them were past the 0.6 cutoff. After the change it sends two chunks and both are under the cutoff. That is what I wanted the fix to do. In Diagnoses I said a better criterion would be that every chunk sent to the model is within the cutoff. My before run scores 4 of 5 on that and my after run scores 5 of 5.
 
 Criteria 1 to 4 stayed exactly the same, which I expected before I ran anything. Criterion 1 cannot go above 4 of 5 because question 3 asks for a figure my corpus does not have. Criteria 2, 3 and 4 were already at 5 of 5, so there was no room for them to go up. Criterion 3 also could not change because I left `gate.py::check` alone on purpose.
