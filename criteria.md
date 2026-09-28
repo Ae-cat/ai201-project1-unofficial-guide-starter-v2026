@@ -78,6 +78,12 @@ For at least 4 of my 5 test questions, the retrieved chunk should be between 50 
 **Why this target:**
 I chose 4 out of 5 to allow for the possibility of an extremely short response or one longer response. I chose between 50 and 400 characters because the documents I have read contain short sentences or paragraphs. I believe this range provides enough information without making the chunks extremely long.
 
+**Revised in unit 2:** 
+For at least 4 of my 5 test questions, all five
+retrieved chunks are between 50 and 400 characters.
+
+ **Why revised:** The original says "the retrieved chunk", singular, but `TOP_K = 5` and every question returns five. The criterion never says which one it means, so it could be scored as the top-ranked chunk, as all five, or as whichever chunk the answer drew on — three different measurements, all defensible, none of them specified. I meant all five and measured all five, so the revision says that. (No changes made to the range)
+
 
 ---
 
