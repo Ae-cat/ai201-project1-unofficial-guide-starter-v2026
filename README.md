@@ -324,7 +324,7 @@ My pipeline runs in five steps: loading, chunking, embedding, retrieval, then ge
 
 ### What I would tighten, and to what
 **Criterion 3 — plausible out-of-corpus questions instead of absurd ones.** I checked which topics my 88 documents genuinely miss rather than guessing: nothing on the gym, career services, tutoring, campus mail or scholarships.
-Those questions sound like ones my corpus does answer, so they should land near 0.6 rather than above 0.78. The target stays at 4 of 5; only the test gets harder. Making the tests harder will better test if the system is learning.
+Those questions sound like ones my corpus does answer, so they should land near 0.6 rather than above 0.78. The target stays at 4 of 5; only the test gets harder. Making the test harder will find out whether the gate works near its boundary.
 
 **Criterion 4 — measure relevance instead of length.** Chunk length does not tell me whether a chunk is useful. A 200-character chunk about laundry is the right length but not relevant for a question about the library. What I actually care about is whether the chunks are relevant. My system already measures that for me: every chunk comes back with a distance, and a smaller distance means the chunk is closer to the question. An alternate tightened version: *for at least 4 of my 5 questions, all five retrieved chunks are within the 0.6 cutoff.* My before run scores 4 of 5 on that. Question 1 fails, because three of its chunks were at 0.662, 0.738 and 0.747 and reached the model anyway — `gate.py::check` only checks the closest chunk, so the rest ride along. Unlike my original, this is a criterion my system can fail.
 
@@ -358,17 +358,36 @@ Overall, my system improved, but my test could not tell.
 
 ## What's Still Broken
 
-<!-- For each criterion still missed after your fix: what you'd do about it,
-     and why you stopped where you did.
+**Criterion 5 is still missed.** One answer in run 1 took 11.898 seconds, which is over my 8 second target. The reason is the rate limiter in `generate.py::_wait_for_slot`. It only allows 30 requests per minute, so when I ran `run_eval.py` and `measure_timing.py` close together the script had to sit and wait. That waiting time got counted as part of the answer time, even though my system was not actually doing anything.
 
-     "I ran out of time" is fine if it's true. Pretending nothing is left is
-     not.
+What I would do about it: run the timing script by itself, and wait at least a minute before starting so the limiter has cleared. I would also print how long each answer spent waiting, so the waiting time and the working time are separate numbers instead of one. (I started testing if values would change if I waited more time between testing and found that it was effective).
 
-     Milestone 5. -->
+Why I stopped here: this is a problem with how I measured, not with my system. Rewriting the criterion in the middle of the unit would mean my before and after runs were measuring different things, so I am leaving it for the next unit.
+
+**Criterion 1 cannot go higher than 4 of 5.** Question 3 asks for the cost of the cheapest housing, and none of my documents actually say what housing costs. The criterion is still MET, but it is stuck at 4 of 5 no matter what I change in my pipeline.
+
+What I would do about it: rewrite question 3 so it asks something my documents can answer, like which building is the cheapest and by how much.
+
+Why I stopped here: if I changed a test question halfway through, my before and after runs would not be testing the same thing. The number would go up without my system getting any better.
+
+**Criterion 4 still cannot fail.** Every chunk my chunker makes is already between 50 and 400 characters, so this criterion passes because of how my corpus is written, not because of anything my system does. In Diagnoses I wrote out a better version that measures relevance instead of length, and that version scores 4 of 5 on my before run.
+
+Why I stopped here: I wrote the replacement down but did not switch to it, for the same reason as above. Swapping a criterion between my before and after runs would have made the comparison invalid.
 
 ## What I'd Do Differently
 
-<!-- Knowing what you know now — which of your five criteria would you write
-     differently, and why?
+**Criterion 1.** Right now it counts a question as failed in two very different situations. Either retrieval missed an answer that was there, or the answer was never in my corpus at all. Those need opposite fixes. The first one means I should fix my pipeline and the second one means I should fix my question or add a document. Next time I would split this into two criteria, or at least write down which kind of failure each question had.
 
-     Milestone 5. -->
+**Criterion 5.** It says the system should answer in under 8 seconds, but it never says under what conditions. If I ask one question on its own it passes easily. If I run the whole test it fails, because the rate limiter starts holding requests back. A criterion that gives me a different answer depending on how I run it is not really measuring what I thought it was. (I only realised that this was occurring once I made the improvement).
+
+**Criterion 2.** It only asks that an answer names at least one source, and all of my answers did. But on question 4 my system listed all five files it retrieved, and four of them did not help answer the question at all. Listing everything is not really the same as naming the source. Next time I would ask that the source it names is one that actually contains the answer, so a reader can check it.
+
+## How I Used AI in Unit 2
+
+Added to the two entries in unit 1.
+
+**3.** I pasted my criterion, my target, my three runs and my verdict into Claude and asked it to argue the opposite verdict as strongly as it could. I thought it would argue about question 3, since that was the one I was least sure about. Instead it pointed out that `scorer.py::judge` looks for my `expects` word inside the retrieved chunk text, and my `expects` for question 4 is `"am"`. That is inside words like campus, exam and program, so question 4 could never have failed no matter what came back. Question 4 turned out to be a real pass anyway so my count did not change, but I would not have known that from looking at the scorer, and it is the reason I went and read the chunks myself.
+
+**4.** I asked Claude to help me write `measure_chunks.py`, which prints the length and the distance of every chunk that comes back. I needed this because `run_eval.py` only measures criteria 1, 2 and 3, so criteria 4 and 5 had no numbers. The distances printed are what my whole diagnosis is based on, including the three chunks over the cutoff on question 1 that my Milestone 4 fix gets rid of. I wrote `measure_timing.py` myself for criterion 5.
+
+**5.** I told Claude about my out-of-corpus questions and asked for help picking harder ones. Before suggesting any, it searched my corpus and found that parking permits and grade appeals both already have documents. I had assumed they did not. If I had put those in `OUT_OF_SCOPE` without checking, the gate would have been right to let them through and I would have written it down as a failure.
